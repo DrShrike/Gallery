@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bouncing Ball Simulation</title>
+  <style>
+    #canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    class Ball {
+  constructor(x, y, vx, vy) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = 50;
+    this.color = this.getRandomColor();
+  }
+  getRandomColor() {
+    let r = Math.floor(Math.random() * 256);
+    let g = Math.floor(Math.random() * 256);
+    let b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+      this.vx = -this.vx;
+    }
+    if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+      this.vy = -this.vy;
+    }
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.stroke();
+  }
+}
+    let ball = new Ball(100, 100, 5, 5);
+    canvas.addEventListener('click', (event) => {
+      let x = event.clientX;
+      let y = event.clientY;
+      let vx = (Math.random() - 0.5) * 10;
+      let vy = (Math.random() - 0.5) * 10;
+      let newBall = new Ball(x, y, vx, vy);
+      balls.push(newBall);
+    });
+    let balls = [ball];
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      balls.forEach((ball) => {
+        ball.update();
+        ball.draw();
+      });
+    }
+    animate();
+  </script>
+</body>
+</html>
